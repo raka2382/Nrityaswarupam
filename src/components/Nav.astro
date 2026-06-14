@@ -1,0 +1,62 @@
+---
+interface Props {
+  active?: "home" | "schedule" | "about" | "gallery" | "join";
+}
+const { active } = Astro.props;
+
+const links = [
+  { id: "home", label: "Home", href: "/" },
+  { id: "schedule", label: "Schedule", href: "/schedule" },
+  { id: "about", label: "About", href: "/about" },
+  { id: "gallery", label: "Gallery", href: "/gallery" },
+] as const;
+
+const base = "font-label-md text-label-md transition-colors duration-300";
+const activeCls = "text-secondary border-b-2 border-secondary pb-1";
+const idleCls = "text-on-surface-variant hover:text-secondary";
+---
+
+<nav class="bg-surface sticky top-0 z-50 w-full border-b border-outline-variant/30 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+  <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-md max-w-7xl mx-auto">
+    <a class="font-headline-sm text-headline-sm text-secondary uppercase tracking-widest text-glow" href="/">Nrityaswarupam</a>
+
+    <div class="hidden md:flex items-center gap-lg">
+      {links.map((l) => (
+        <a class={`${base} ${active === l.id ? activeCls : idleCls}`} href={l.href}>{l.label}</a>
+      ))}
+    </div>
+
+    <a
+      class="hidden md:flex items-center justify-center bg-primary-container text-tertiary-fixed font-label-md text-label-md px-6 py-2 rounded-full gold-glow transition-all duration-300 border border-transparent hover:border-secondary/30"
+      href="/join"
+    >
+      Join Class
+    </a>
+
+    <button class="md:hidden text-secondary" data-menu-toggle aria-label="Toggle navigation" aria-expanded="false">
+      <span class="material-symbols-outlined text-2xl">menu</span>
+    </button>
+  </div>
+
+  <div class="hidden md:hidden border-t border-outline-variant/20 bg-surface px-margin-mobile py-md flex flex-col gap-sm" data-mobile-menu>
+    {links.map((l) => (
+      <a class={`py-1 ${base} ${active === l.id ? "text-secondary" : idleCls}`} href={l.href}>{l.label}</a>
+    ))}
+    <a class="mt-sm bg-primary-container text-tertiary-fixed font-label-md text-label-md px-6 py-3 rounded-full text-center" href="/join">Join Class</a>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+  if (toggle && menu) {
+    const icon = toggle.querySelector(".material-symbols-outlined");
+    const setOpen = (open: boolean) => {
+      menu.classList.toggle("hidden", !open);
+      if (icon) icon.textContent = open ? "close" : "menu";
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    toggle.addEventListener("click", () => setOpen(menu.classList.contains("hidden")));
+    menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+  }
+</script>

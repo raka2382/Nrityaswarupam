@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const id = String(form.get("id") ?? "");
+  if (id) await supabase.from("gallery_items").delete().eq("id", id);
+  return Astro.redirect("/admin/gallery");
+}
+
+const { data: items } = await supabase.from("gallery_items").select("*").order("sort_order");
+---
+
+<AdminLayout title="Gallery" active="gallery">
+  <div class="flex justify-end mb-md">
+    <a href="/admin/gallery/new" class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-6 py-3 rounded gold-glow border border-transparent hover:border-secondary/30 inline-flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">add_photo_alternate</span> Add photo
+    </a>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-gutter">
+    {(items ?? []).map((it) => (
+      <div class="bg-surface-container-low border border-outline-variant/30 rounded-xl overflow-hidden">
+        <div class="aspect-square bg-surface-container-highest">
+          <img src={it.image} alt={it.title} class="w-full h-full object-cover" />
+        </div>
+        <div class="p-md">
+          <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">{it.category}</p>
+          <p class="font-body-md text-body-md text-on-surface truncate">{it.title}</p>
+          <div class="flex items-center justify-end gap-3 mt-sm">
+            <a href={`/admin/gallery/${it.id}`} class="text-secondary hover:text-primary"><span class="material-symbols-outlined">edit</span></a>
+            <form method="POST" onsubmit="return confirm('Delete this photo?')">
+              <input type="hidden" name="id" value={it.id} />
+              <button class="text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    ))}
+    {(!items || items.length === 0) && <p class="font-body-md text-on-surface-variant col-span-full">No photos yet. Add your first one.</p>}
+  </div>
+</AdminLayout>

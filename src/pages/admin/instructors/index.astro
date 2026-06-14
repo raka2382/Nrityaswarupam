@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const id = String(form.get("id") ?? "");
+  if (id) await supabase.from("instructors").delete().eq("id", id);
+  return Astro.redirect("/admin/instructors");
+}
+
+const { data: people } = await supabase.from("instructors").select("*").order("sort_order");
+---
+
+<AdminLayout title="Instructors" active="instructors">
+  <div class="flex justify-end mb-md">
+    <a href="/admin/instructors/new" class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-6 py-3 rounded gold-glow border border-transparent hover:border-secondary/30 inline-flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">person_add</span> Add instructor
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+    {(people ?? []).map((p) => (
+      <div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-md flex items-center gap-md">
+        <div class="w-16 h-16 rounded-full overflow-hidden bg-surface-container-highest border border-outline-variant/30 shrink-0">
+          {p.photo && <img src={p.photo} alt={p.name} class="w-full h-full object-cover" />}
+        </div>
+        <div class="min-w-0 flex-grow">
+          <p class="font-headline-sm text-headline-sm text-on-surface truncate">{p.name}</p>
+          <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest truncate">{p.title}</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href={`/admin/instructors/${p.id}`} class="text-secondary hover:text-primary"><span class="material-symbols-outlined">edit</span></a>
+          <form method="POST" onsubmit="return confirm('Remove this instructor?')">
+            <input type="hidden" name="id" value={p.id} />
+            <button class="text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+          </form>
+        </div>
+      </div>
+    ))}
+    {(!people || people.length === 0) && <p class="font-body-md text-on-surface-variant col-span-full">No instructors yet.</p>}
+  </div>
+</AdminLayout>

@@ -1,0 +1,52 @@
+---
+export const prerender = false;
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+let error = "";
+let saved = false;
+
+if (Astro.request.method === "POST") {
+  const f = await Astro.request.formData();
+  const payload = {
+    id: 1,
+    address: String(f.get("address") ?? "").trim(),
+    phone: String(f.get("phone") ?? "").trim(),
+    email: String(f.get("email") ?? "").trim(),
+    hours: String(f.get("hours") ?? "").trim(),
+    updated_at: new Date().toISOString(),
+  };
+  const { error: err } = await supabase.from("site_settings").upsert(payload);
+  if (err) error = err.message;
+  else saved = true;
+}
+
+const { data } = await supabase.from("site_settings").select("*").eq("id", 1).single();
+const row = data ?? { address: "", phone: "", email: "", hours: "" };
+
+const field = "w-full bg-transparent border border-outline-variant rounded p-3 text-on-surface font-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none";
+const lbl = "block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2";
+---
+
+<AdminLayout title="Settings" active="settings">
+  <p class="font-body-md text-body-md text-on-surface-variant mb-lg max-w-2xl">
+    These details appear in the "Visit the Studio" panel on the Join page.
+  </p>
+  <form method="POST" class="max-w-2xl space-y-md">
+    {saved && <p class="text-secondary font-body-md">Saved.</p>}
+    {error && <p class="text-error font-body-md">{error}</p>}
+    <div>
+      <label class={lbl} for="address">Address</label>
+      <textarea id="address" name="address" rows="2" class={field}>{row.address}</textarea>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+      <div><label class={lbl} for="phone">Phone</label><input id="phone" name="phone" class={field} value={row.phone} /></div>
+      <div><label class={lbl} for="email">Email</label><input id="email" name="email" type="email" class={field} value={row.email} /></div>
+    </div>
+    <div><label class={lbl} for="hours">Opening hours</label><input id="hours" name="hours" class={field} value={row.hours} /></div>
+    <div class="pt-sm">
+      <button class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-8 py-3 rounded gold-glow border border-transparent hover:border-secondary/30">Save</button>
+    </div>
+  </form>
+</AdminLayout>

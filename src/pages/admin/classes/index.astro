@@ -1,0 +1,64 @@
+---
+export const prerender = false;
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const id = String(form.get("id") ?? "");
+  if (id) await supabase.from("classes").delete().eq("id", id);
+  return Astro.redirect("/admin/classes");
+}
+
+const { data: classes } = await supabase
+  .from("classes")
+  .select("*")
+  .order("day")
+  .order("sort_order");
+---
+
+<AdminLayout title="Classes" active="classes">
+  <div class="flex justify-end mb-md">
+    <a href="/admin/classes/new" class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-6 py-3 rounded gold-glow border border-transparent hover:border-secondary/30 inline-flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">add</span> New class
+    </a>
+  </div>
+
+  <div class="overflow-x-auto border border-outline-variant/30 rounded-xl">
+    <table class="w-full text-left">
+      <thead class="bg-surface-container">
+        <tr class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
+          <th class="p-md">Title</th>
+          <th class="p-md">Day</th>
+          <th class="p-md">Time</th>
+          <th class="p-md">Form / Level</th>
+          <th class="p-md text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(classes ?? []).map((c) => (
+          <tr class="border-t border-outline-variant/20 font-body-md text-body-md">
+            <td class="p-md text-on-surface">{c.title}{c.featured && <span class="ml-2 text-secondary text-label-sm">★</span>}</td>
+            <td class="p-md text-on-surface-variant">{c.day}</td>
+            <td class="p-md text-on-surface-variant">{c.time}</td>
+            <td class="p-md text-on-surface-variant capitalize">{c.dance_form} · {c.level}</td>
+            <td class="p-md">
+              <div class="flex items-center justify-end gap-3">
+                <a href={`/admin/classes/${c.id}`} class="text-secondary hover:text-primary"><span class="material-symbols-outlined">edit</span></a>
+                <form method="POST" onsubmit="return confirm('Delete this class?')">
+                  <input type="hidden" name="id" value={c.id} />
+                  <button class="text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        ))}
+        {(!classes || classes.length === 0) && (
+          <tr><td colspan="5" class="p-lg text-center text-on-surface-variant font-body-md">No classes yet. Add your first one.</td></tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</AdminLayout>

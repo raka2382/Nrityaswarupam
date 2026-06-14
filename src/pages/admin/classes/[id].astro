@@ -1,0 +1,110 @@
+---
+export const prerender = false;
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+const { id } = Astro.params;
+const isNew = id === "new";
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const f = await Astro.request.formData();
+  const payload = {
+    title: String(f.get("title") ?? "").trim(),
+    dance_form: String(f.get("dance_form") ?? "").trim().toLowerCase() || "kathak",
+    level: String(f.get("level") ?? "beginner"),
+    day: String(f.get("day") ?? "Monday"),
+    time: String(f.get("time") ?? "").trim(),
+    duration: String(f.get("duration") ?? "").trim(),
+    instructor: String(f.get("instructor") ?? "").trim(),
+    room: String(f.get("room") ?? "").trim(),
+    instructor_image: String(f.get("instructor_image") ?? "").trim() || null,
+    sort_order: Number(f.get("sort_order") ?? 0) || 0,
+    featured: f.get("featured") === "on",
+    blurb: String(f.get("blurb") ?? "").trim() || null,
+    image: String(f.get("image") ?? "").trim() || null,
+  };
+  if (!payload.title) {
+    error = "Title is required.";
+  } else {
+    const res = isNew
+      ? await supabase.from("classes").insert(payload)
+      : await supabase.from("classes").update(payload).eq("id", id);
+    if (res.error) error = res.error.message;
+    else return Astro.redirect("/admin/classes");
+  }
+}
+
+let row: Record<string, any> = {
+  title: "", dance_form: "kathak", level: "beginner", day: "Monday",
+  time: "", duration: "", instructor: "", room: "", instructor_image: "",
+  sort_order: 0, featured: false, blurb: "", image: "",
+};
+if (!isNew) {
+  const { data } = await supabase.from("classes").select("*").eq("id", id).single();
+  if (data) row = data;
+}
+
+const { data: formRows } = await supabase.from("classes").select("dance_form");
+const danceFormSuggestions = Array.from(
+  new Set([
+    ...(formRows ?? []).map((r) => r.dance_form),
+    "kathak", "bharatanatyam", "odissi", "kuchipudi", "all",
+  ].filter(Boolean))
+);
+const levels = ["beginner", "intermediate", "advanced", "all"];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const field = "w-full bg-transparent border border-outline-variant rounded p-3 text-on-surface font-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none";
+const lbl = "block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2";
+---
+
+<AdminLayout title={isNew ? "New class" : "Edit class"} active="classes">
+  <form method="POST" class="max-w-2xl space-y-md">
+    {error && <p class="text-error font-body-md">{error}</p>}
+    <div>
+      <label class={lbl} for="title">Class title</label>
+      <input id="title" name="title" class={field} value={row.title} required />
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+      <div>
+        <label class={lbl} for="dance_form">Dance form</label>
+        <input id="dance_form" name="dance_form" list="dance-form-list" class={field} value={row.dance_form} placeholder="e.g. kathak, mohiniyattam…" />
+        <datalist id="dance-form-list">
+          {danceFormSuggestions.map((o) => <option value={o}></option>)}
+        </datalist>
+      </div>
+      <div>
+        <label class={lbl} for="level">Level</label>
+        <select id="level" name="level" class={`${field} capitalize`}>
+          {levels.map((o) => <option value={o} selected={row.level === o}>{o}</option>)}
+        </select>
+      </div>
+      <div>
+        <label class={lbl} for="day">Day</label>
+        <select id="day" name="day" class={field}>
+          {days.map((o) => <option value={o} selected={row.day === o}>{o}</option>)}
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+      <div><label class={lbl} for="time">Start time</label><input id="time" name="time" class={field} value={row.time} placeholder="08:00 AM" /></div>
+      <div><label class={lbl} for="duration">Duration</label><input id="duration" name="duration" class={field} value={row.duration} placeholder="90 Mins" /></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+      <div><label class={lbl} for="instructor">Instructor</label><input id="instructor" name="instructor" class={field} value={row.instructor} /></div>
+      <div><label class={lbl} for="room">Room / Studio</label><input id="room" name="room" class={field} value={row.room} /></div>
+    </div>
+    <div><label class={lbl} for="instructor_image">Instructor photo URL (optional)</label><input id="instructor_image" name="instructor_image" class={field} value={row.instructor_image ?? ""} /></div>
+    <div><label class={lbl} for="sort_order">Order within the day</label><input id="sort_order" name="sort_order" type="number" class={field} value={row.sort_order} /></div>
+    <label class="flex items-center gap-3 font-body-md text-on-surface-variant">
+      <input type="checkbox" name="featured" checked={row.featured} class="w-5 h-5 accent-secondary" /> Featured workshop card
+    </label>
+    <div><label class={lbl} for="blurb">Description (featured only)</label><textarea id="blurb" name="blurb" rows="3" class={field}>{row.blurb ?? ""}</textarea></div>
+    <div><label class={lbl} for="image">Banner image URL (featured only)</label><input id="image" name="image" class={field} value={row.image ?? ""} /></div>
+    <div class="flex gap-md pt-sm">
+      <button class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-8 py-3 rounded gold-glow border border-transparent hover:border-secondary/30">Save</button>
+      <a href="/admin/classes" class="font-label-md text-label-md text-on-surface-variant hover:text-secondary self-center">Cancel</a>
+    </div>
+  </form>
+</AdminLayout>

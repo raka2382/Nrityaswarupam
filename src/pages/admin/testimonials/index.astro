@@ -1,0 +1,46 @@
+---
+export const prerender = false;
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const id = String(form.get("id") ?? "");
+  if (id) await supabase.from("testimonials").delete().eq("id", id);
+  return Astro.redirect("/admin/testimonials");
+}
+
+const { data: items } = await supabase.from("testimonials").select("*").order("sort_order");
+---
+
+<AdminLayout title="Testimonials" active="testimonials">
+  <div class="flex justify-end mb-md">
+    <a href="/admin/testimonials/new" class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-6 py-3 rounded gold-glow border border-transparent hover:border-secondary/30 inline-flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">add_comment</span> Add testimonial
+    </a>
+  </div>
+
+  <div class="space-y-md">
+    {(items ?? []).map((t) => (
+      <div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-lg flex items-start gap-md">
+        <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant border border-secondary/30 shrink-0">
+          {t.photo && <img src={t.photo} alt={t.name} class="w-full h-full object-cover" />}
+        </div>
+        <div class="flex-grow min-w-0">
+          <p class="font-body-md text-body-md text-on-surface-variant italic">&ldquo;{t.quote}&rdquo;</p>
+          <p class="font-label-md text-label-md text-tertiary-fixed mt-sm">{t.name} <span class="text-on-surface-variant uppercase text-label-sm">· {t.role}</span></p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <a href={`/admin/testimonials/${t.id}`} class="text-secondary hover:text-primary"><span class="material-symbols-outlined">edit</span></a>
+          <form method="POST" onsubmit="return confirm('Delete this testimonial?')">
+            <input type="hidden" name="id" value={t.id} />
+            <button class="text-on-surface-variant hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+          </form>
+        </div>
+      </div>
+    ))}
+    {(!items || items.length === 0) && <p class="font-body-md text-on-surface-variant">No testimonials yet.</p>}
+  </div>
+</AdminLayout>

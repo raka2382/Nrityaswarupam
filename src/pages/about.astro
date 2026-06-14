@@ -1,0 +1,99 @@
+---
+export const prerender = false;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getInstructors } from "../lib/data";
+
+const instructors = await getInstructors();
+---
+
+<BaseLayout title="About Us | Nrityaswarupam" active="about" bodyClass="bg-surface text-on-surface" description="The story of Nrityaswarupam — a sanctuary preserving the rhythm of ages, rooted in the Guru-Shishya parampara.">
+  <main class="flex-grow w-full">
+    <!-- Hero Section -->
+    <section class="relative w-full min-h-[614px] md:min-h-[819px] flex flex-col justify-center items-center px-margin-mobile md:px-margin-desktop py-xl">
+      <div class="absolute inset-0 z-0 opacity-20">
+        <img alt="Empty theatre stage" class="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACcEO4CSQ64Ydcgj0DO2l5IgkaLXrYETdt-R7S8o_ceE24JYQ_na87G24G777Fr6GXsN-s5qbNuSuXTp4go5PNSMCoKqOWjEGturX0muVZWq5xKZl3y102YfFGxjEsoukEDJuHSHnFxTtFYo_-8fu1yPPxM2H4LWeAJO8X5jxrOFUXnh_xPnU49Pi45-DuYwgyDityVnsxoYr17fVXrviudDPXRJsEmQLPigUWuX_3oFiRBmSDi6R9mHk9u_mzWrFTHWFqyCjUHAH6" />
+        <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-transparent"></div>
+      </div>
+      <div class="relative z-10 text-center max-w-4xl mx-auto space-y-md">
+        <span class="font-label-md text-label-md text-secondary tracking-[0.2em] uppercase">The Story of</span>
+        <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">
+          Preserving the <span class="text-secondary italic">Rhythm</span> of Ages
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mt-lg">
+          Rooted in the ancient texts and blooming in contemporary spaces, Nrityaswarupam is a sanctuary for those who seek to understand dance not just as movement, but as a spiritual discipline.
+        </p>
+      </div>
+    </section>
+
+    <!-- Our Philosophy -->
+    <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+      <div class="flex items-center gap-sm mb-xl">
+        <div class="h-[1px] w-12 bg-secondary"></div>
+        <h2 class="font-headline-md text-headline-md text-on-surface">Our Philosophy</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter auto-rows-[minmax(300px,auto)]">
+        <div class="md:col-span-8 bg-surface-container-low border-[0.5px] border-outline-variant/50 rounded-xl p-lg flex flex-col justify-between group glow-hover transition-all duration-500 relative overflow-hidden">
+          <div class="relative z-10 space-y-md max-w-xl">
+            <span class="material-symbols-outlined text-secondary text-4xl mb-sm block">self_improvement</span>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors">The Discipline of Stillness</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Before movement begins, there must be intent. We believe true mastery is born from inner stillness. Our rigorous foundational training focuses on alignment, breath, and the mental fortitude required to embody ancient rhythms.
+            </p>
+          </div>
+          <div class="absolute right-0 bottom-0 opacity-5 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none transform translate-x-1/4 translate-y-1/4">
+            <span class="material-symbols-outlined text-[200px] fill">spa</span>
+          </div>
+        </div>
+        <div class="md:col-span-4 bg-surface-container-high border-[0.5px] border-outline-variant/30 rounded-xl p-lg flex flex-col justify-end group glow-hover transition-all duration-500 relative overflow-hidden">
+          <img alt="Dancer's hand forming a mudra" class="absolute inset-0 w-full h-full object-cover mix-blend-luminosity opacity-40 group-hover:opacity-60 group-hover:mix-blend-normal transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqie_9oX4WLazbKYwOvNp8D0fTxpIj4kL97QiEJa5JmqdWjUMg29QtX-VuO9-5mKKIi6ybAqS-wIg_l6-LmuVD508i6MtI78S2K18ywuMcVhoyJy9IChNPgz8Iex32KhnUxfIFY7y6U4YjcEm43ov5NHXd9yzvaz_3-MaWL8bKLrGvzUmZfW082MqXkUFfy7vAf1ccysX0Gx2HWpmjdGYOlwC0XgYoeTPsAHQKM2eXxL-dUsxnuD8xwPMjwDi0Vbi5BVLdIrFbiJIX" />
+          <div class="absolute inset-0 bg-gradient-to-t from-surface-container-high via-surface-container-high/80 to-transparent"></div>
+          <div class="relative z-10">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-sm">Abhinaya</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant">The art of profound expression, connecting soul to audience.</p>
+          </div>
+        </div>
+        <div class="md:col-span-12 bg-surface-container border-[0.5px] border-secondary/20 rounded-xl p-xl flex flex-col md:flex-row items-center justify-between gap-xl glow-hover transition-all duration-500">
+          <div class="md:w-1/2 space-y-md">
+            <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Heritage</span>
+            <h3 class="font-headline-md text-headline-md text-on-surface">A Living Lineage</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              We do not merely teach steps; we transmit a legacy. Our curriculum is deeply rooted in the Guru-Shishya parampara, ensuring the sacred geometries and rhythmic complexities of classical dance remain unbroken for generations to come.
+            </p>
+          </div>
+          <div class="md:w-1/2 flex justify-end">
+            <div class="w-full max-w-sm aspect-square border border-outline-variant rounded-full flex items-center justify-center relative p-md">
+              <div class="absolute inset-2 border border-secondary/40 rounded-full border-dashed animate-[spin_60s_linear_infinite]"></div>
+              <img alt="Temple bells and brass ornaments" class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx8qp-L_E48Q57aHjkv_wgryER1gUMOv0AHN50uNfjka8GVYJ6diparI4ijA2Byz3nM50jmOeYaHG3apRfX97t7q9eQpg13V1anKjpi6eeXipLXkdaaJqZzx5qv5qvXaKPN1kLtaEnEz49-MS4yqeLxsBl3snnX8a0neVy0TkOpVpZEH6DJZXxHXYBCIOsC6kDOMaKrwAaRwDimrBl-HqlcquonI8siX61Pscn8mdAfXqZMHJM41UohMBu6PxqltOJJFqdylHNbhht" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Instructors Section -->
+    <section class="w-full bg-surface-container-lowest py-xl mt-xl border-t border-outline-variant/10">
+      <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+        <div class="text-center mb-xl space-y-sm">
+          <h2 class="font-headline-lg text-headline-lg text-on-surface">The Masters</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+            Guided by artists who have dedicated their lives to the pursuit of perfection.
+          </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-gutter">
+          {instructors.map((person, i) => (
+            <div class={`group flex flex-col items-center text-center space-y-md w-full sm:w-64 ${i % 2 === 1 ? "mt-0 md:mt-xl" : ""}`}>
+              <div class="w-48 h-64 overflow-hidden rounded-t-full bg-surface-container border border-outline-variant/30 mb-sm relative">
+                <div class="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/10 transition-colors duration-500 z-10 mix-blend-overlay"></div>
+                {person.photo && (
+                  <img alt={`Portrait of ${person.name}`} class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" src={person.photo} />
+                )}
+              </div>
+              <h4 class="font-headline-sm text-headline-sm text-on-surface">{person.name}</h4>
+              <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">{person.title}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

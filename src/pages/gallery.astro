@@ -1,0 +1,87 @@
+---
+export const prerender = false;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getGalleryItems } from "../lib/data";
+
+const items = await getGalleryItems();
+
+// Filter tabs are built from the categories actually in use, so any category
+// you assign in the admin automatically becomes a tab here.
+const categories = Array.from(new Set(items.map((i) => i.category).filter(Boolean)));
+---
+
+<BaseLayout title="Gallery — The Stage | Nrityaswarupam" active="gallery" bodyClass="bg-surface text-on-surface" description="A visual chronicle of rhythm and grace — stage shows, classroom moments and workshops at Nrityaswarupam.">
+  <main class="flex-grow w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+    <!-- Hero -->
+    <header class="text-center mb-xl">
+      <div class="inline-flex items-center justify-center mb-md">
+        <span class="h-[1px] w-12 bg-secondary/50 hidden md:block mr-md"></span>
+        <span class="material-symbols-outlined text-secondary fill">stars</span>
+        <span class="h-[1px] w-12 bg-secondary/50 hidden md:block ml-md"></span>
+      </div>
+      <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-md">The Stage</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+        A visual chronicle of rhythm and grace. Witness the timeless discipline of our dancers as they bridge ancient traditions with contemporary expression.
+      </p>
+    </header>
+
+    <!-- Filters -->
+    <section class="flex flex-wrap justify-center gap-sm md:gap-md mb-xl" data-gallery-filters>
+      <button data-filter-category="all" class="px-md py-sm border-b-2 border-secondary text-secondary font-label-md uppercase tracking-wider transition-all">All</button>
+      {categories.map((c) => (
+        <button data-filter-category={c} class="px-md py-sm border-b-2 border-transparent text-on-surface-variant hover:text-secondary hover:border-secondary/50 transition-all font-label-md uppercase tracking-wider">{c}</button>
+      ))}
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="masonry-grid">
+      {items.map((item) => (
+        <div data-gallery-item data-category={item.category} class="masonry-item group relative overflow-hidden bg-surface-container-high border border-outline-variant/30 rounded">
+          <div class={`${item.aspect} w-full bg-surface-container-highest relative`}>
+            <img alt={item.title} class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 opacity-90 group-hover:opacity-100 group-hover:scale-105" src={item.image} />
+            <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full p-md translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+            <p class="font-label-sm text-label-sm text-secondary mb-xs uppercase tracking-widest">{item.category}</p>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-sm">{item.title}</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{item.caption}</p>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- CTA -->
+    <div class="mt-xl flex justify-center">
+      <button class="bg-transparent border border-secondary text-secondary font-label-md uppercase tracking-wider px-lg py-md hover:bg-secondary/10 transition-colors duration-300 flex items-center gap-sm rounded">
+        View More Performances
+        <span class="material-symbols-outlined text-sm">arrow_downward</span>
+      </button>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-filter-category]"));
+  const galleryItems = Array.from(document.querySelectorAll<HTMLElement>("[data-gallery-item]"));
+
+  function setActive(active: HTMLButtonElement) {
+    tabs.forEach((t) => {
+      const on = t === active;
+      t.classList.toggle("text-secondary", on);
+      t.classList.toggle("border-secondary", on);
+      t.classList.toggle("text-on-surface-variant", !on);
+      t.classList.toggle("border-transparent", !on);
+    });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const cat = (tab.dataset.filterCategory || "all").toLowerCase();
+      galleryItems.forEach((item) => {
+        const itemCat = (item.dataset.category || "").toLowerCase();
+        item.classList.toggle("hidden", cat !== "all" && itemCat !== cat);
+      });
+      setActive(tab);
+    });
+  });
+</script>

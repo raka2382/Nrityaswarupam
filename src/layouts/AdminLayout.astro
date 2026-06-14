@@ -1,0 +1,58 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  active?: "home" | "classes" | "gallery" | "instructors" | "testimonials" | "stats" | "enquiries" | "settings";
+}
+const { title, active } = Astro.props;
+const email = Astro.locals.user?.email;
+
+const nav = [
+  { id: "home", label: "Overview", href: "/admin" },
+  { id: "classes", label: "Classes", href: "/admin/classes" },
+  { id: "gallery", label: "Gallery", href: "/admin/gallery" },
+  { id: "instructors", label: "Instructors", href: "/admin/instructors" },
+  { id: "testimonials", label: "Testimonials", href: "/admin/testimonials" },
+  { id: "stats", label: "Stats", href: "/admin/stats" },
+  { id: "enquiries", label: "Enquiries", href: "/admin/enquiries" },
+  { id: "settings", label: "Settings", href: "/admin/settings" },
+] as const;
+---
+
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} · Admin</title>
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col custom-scrollbar">
+    <header class="border-b border-outline-variant/30 bg-surface">
+      <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-md flex items-center justify-between gap-md">
+        <a href="/admin" class="font-headline-sm text-headline-sm text-secondary uppercase tracking-widest text-glow">Nrityaswarupam <span class="text-on-surface-variant text-label-md normal-case tracking-normal">admin</span></a>
+        <div class="flex items-center gap-md">
+          <a href="/" class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">View site ↗</a>
+          {email && <span class="hidden sm:inline font-label-sm text-label-sm text-on-surface-variant/70">{email}</span>}
+          <form method="POST" action="/admin/logout">
+            <button class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors">Sign out</button>
+          </form>
+        </div>
+      </div>
+      <nav class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex gap-lg overflow-x-auto">
+        {nav.map((n) => (
+          <a href={n.href} class={`py-sm font-label-md text-label-md border-b-2 transition-colors whitespace-nowrap ${active === n.id ? "text-secondary border-secondary" : "text-on-surface-variant border-transparent hover:text-secondary"}`}>{n.label}</a>
+        ))}
+      </nav>
+    </header>
+    <main class="flex-grow w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg">
+      <h1 class="font-headline-md text-headline-md text-on-surface mb-lg">{title}</h1>
+      <slot />
+    </main>
+  </body>
+</html>

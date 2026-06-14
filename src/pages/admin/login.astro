@@ -1,0 +1,78 @@
+---
+export const prerender = false;
+import "../../styles/global.css";
+import { isSupabaseConfigured, createSupabaseServerClient } from "../../lib/supabase";
+
+const configured = isSupabaseConfigured();
+let sent = false;
+let error = "";
+
+const denied = Astro.url.searchParams.get("denied") === "1";
+
+if (Astro.request.method === "POST" && configured) {
+  const form = await Astro.request.formData();
+  const email = String(form.get("email") ?? "").trim();
+  if (email) {
+    const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+    // shouldCreateUser: false → never create an account; only existing admins
+    // (added in Supabase) can receive a link. We always show the same message
+    // afterwards so the form can't be used to discover who is an admin.
+    await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: new URL("/admin/callback", Astro.url.origin).toString(),
+      },
+    });
+    sent = true;
+  }
+}
+---
+
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Sign In · Nrityaswarupam</title>
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-background text-on-background font-body-md antialiased min-h-screen flex items-center justify-center px-margin-mobile">
+    <div class="w-full max-w-md bg-surface-container-low border border-outline-variant/30 rounded-xl p-xl atmospheric-depth">
+      <h1 class="font-headline-sm text-headline-sm text-secondary text-glow text-center mb-sm">Nrityaswarupam</h1>
+      <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest text-center mb-lg">Admin Sign In</p>
+
+      {!configured && (
+        <div class="bg-surface-container border border-error/40 rounded p-md text-on-surface-variant font-body-md">
+          <p class="mb-2 text-error font-label-md">Supabase isn't connected yet.</p>
+          <p>Add <code>PUBLIC_SUPABASE_URL</code> and <code>PUBLIC_SUPABASE_ANON_KEY</code> to your <code>.env</code>, then restart. See <code>TIER2_PLAN.md</code>.</p>
+        </div>
+      )}
+
+      {configured && sent && (
+        <div class="bg-surface-container border border-secondary/40 rounded p-md text-on-surface-variant font-body-md">
+          <p class="text-secondary font-label-md mb-1">Check your inbox</p>
+          <p>If that email belongs to an academy admin, a secure sign-in link is on its way. Open it on this device to continue.</p>
+        </div>
+      )}
+
+      {configured && !sent && (
+        <form method="POST" class="space-y-md">
+          {denied && <p class="text-error font-body-md">That account isn't on the admin list. Contact your administrator for access.</p>}
+          {error && <p class="text-error font-body-md">{error}</p>}
+          <div>
+            <label class="block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2" for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com" class="w-full bg-transparent border border-outline-variant rounded p-3 text-on-surface font-body-md placeholder:text-on-surface-variant/40 focus:border-secondary focus:ring-1 focus:ring-secondary outline-none" />
+          </div>
+          <button type="submit" class="w-full bg-primary-container text-tertiary-fixed font-label-md text-label-md px-8 py-3 rounded gold-glow transition-all duration-300 border border-transparent hover:border-secondary/30">
+            Email me a sign-in link
+          </button>
+          <p class="font-label-sm text-label-sm text-on-surface-variant/60 text-center">Only invited academy staff can sign in.</p>
+        </form>
+      )}
+    </div>
+  </body>
+</html>

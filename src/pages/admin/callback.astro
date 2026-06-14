@@ -1,0 +1,40 @@
+---
+export const prerender = false;
+import "../../styles/global.css";
+import { createSupabaseServerClient } from "../../lib/supabase";
+import type { EmailOtpType } from "@supabase/supabase-js";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+const code = Astro.url.searchParams.get("code");
+const tokenHash = Astro.url.searchParams.get("token_hash");
+const type = Astro.url.searchParams.get("type") as EmailOtpType | null;
+
+let error = "";
+if (code) {
+  const { error: err } = await supabase.auth.exchangeCodeForSession(code);
+  if (err) error = err.message;
+  else return Astro.redirect("/admin");
+} else if (tokenHash && type) {
+  const { error: err } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+  if (err) error = err.message;
+  else return Astro.redirect("/admin");
+} else {
+  error = "This sign-in link is missing its token. Please request a new one.";
+}
+---
+
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Signing in…</title>
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-background text-on-background font-body-md antialiased min-h-screen flex items-center justify-center px-margin-mobile text-center">
+    <div class="max-w-md">
+      <p class="text-error font-body-md mb-md">{error}</p>
+      <a href="/admin/login" class="text-secondary gold-thread font-label-md">Back to sign in</a>
+    </div>
+  </body>
+</html>

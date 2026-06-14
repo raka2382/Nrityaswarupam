@@ -1,0 +1,14 @@
+# build output
+dist/
+# generated types / cache
+.astro/
+# dependencies
+node_modules/
+# sandbox-local home (telemetry workaround)
+.home/
+# env & secrets
+.env
+.env.*
+!.env.example
+# os
+.DS_Store

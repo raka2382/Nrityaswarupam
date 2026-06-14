@@ -1,0 +1,49 @@
+---
+export const prerender = false;
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import { createSupabaseServerClient } from "../../../lib/supabase";
+
+const supabase = createSupabaseServerClient(Astro.request.headers, Astro.cookies);
+const { id } = Astro.params;
+const isNew = id === "new";
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const f = await Astro.request.formData();
+  const payload = {
+    value: String(f.get("value") ?? "").trim(),
+    label: String(f.get("label") ?? "").trim(),
+    sort_order: Number(f.get("sort_order") ?? 0) || 0,
+  };
+  if (!payload.value || !payload.label) error = "Both a number and a label are required.";
+  else {
+    const res = isNew
+      ? await supabase.from("stats").insert(payload)
+      : await supabase.from("stats").update(payload).eq("id", id);
+    if (res.error) error = res.error.message;
+    else return Astro.redirect("/admin/stats");
+  }
+}
+
+let row: Record<string, any> = { value: "", label: "", sort_order: 0 };
+if (!isNew) {
+  const { data } = await supabase.from("stats").select("*").eq("id", id).single();
+  if (data) row = data;
+}
+
+const field = "w-full bg-transparent border border-outline-variant rounded p-3 text-on-surface font-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none";
+const lbl = "block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2";
+---
+
+<AdminLayout title={isNew ? "Add stat" : "Edit stat"} active="stats">
+  <form method="POST" class="max-w-xl space-y-md">
+    {error && <p class="text-error font-body-md">{error}</p>}
+    <div><label class={lbl} for="value">Number / value</label><input id="value" name="value" class={field} value={row.value} placeholder="e.g. 500 or 20+" required /></div>
+    <div><label class={lbl} for="label">Label</label><input id="label" name="label" class={field} value={row.label} placeholder="e.g. Active Students" required /></div>
+    <div><label class={lbl} for="sort_order">Order</label><input id="sort_order" name="sort_order" type="number" class={field} value={row.sort_order} /></div>
+    <div class="flex gap-md pt-sm">
+      <button class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-8 py-3 rounded gold-glow border border-transparent hover:border-secondary/30">Save</button>
+      <a href="/admin/stats" class="font-label-md text-label-md text-on-surface-variant hover:text-secondary self-center">Cancel</a>
+    </div>
+  </form>
+</AdminLayout>

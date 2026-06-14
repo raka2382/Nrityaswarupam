@@ -1,0 +1,45 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  bodyClass?: string;
+  active?: "home" | "schedule" | "about" | "gallery" | "join";
+}
+
+const {
+  title,
+  description = "Elevating tradition through movement. A sanctuary for classical Indian dance — Bharatanatyam, Kathak, Odissi and more.",
+  bodyClass = "bg-background text-on-background",
+  active,
+} = Astro.props;
+---
+
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class={`${bodyClass} font-body-md antialiased min-h-screen flex flex-col overflow-x-hidden custom-scrollbar selection:bg-secondary selection:text-on-secondary`}>
+    <Nav active={active} />
+    <slot />
+    <Footer />
+  </body>
+</html>

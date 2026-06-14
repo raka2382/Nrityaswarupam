@@ -1,0 +1,172 @@
+---
+export const prerender = false;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getTestimonials, getStats } from "../lib/data";
+
+const testimonials = await getTestimonials();
+const stats = await getStats();
+---
+
+<BaseLayout title="Nrityaswarupam Dance Academy" active="home">
+  <div class="flex-grow">
+    <!-- Hero Section -->
+    <header class="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-lg pb-32">
+      <div class="absolute inset-0 z-0">
+        <img alt="Classical Indian dancer on a dimly lit stage" class="w-full h-full object-cover opacity-30 image-desaturate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDs4flYGBq_L_UiCq3OfcLqahq_aTnTJAxBPxCH5ANTcHw6LHB92AkiIdxlngMNal29i0pv4pI2izo3o8ZYNSv7nHa76xZXDC-nGDktFfvUIopR7sd3cCP20UIKwz6QLClpJBygq7iRaJ0DS_-xfwPwH7m7I4hy7nadCN6Pk9biXWe4XWq-8HVuxQCvTxGV_sj2foIMNyx_wFhOa8336nIhJ3iQOALg0GqYrlFzp3DuCZtkEHgxyA_8rfoo4dT8vp1tDiDY97thZzq" />
+        <div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-secondary/5 via-transparent to-transparent opacity-50"></div>
+      </div>
+      <div class="relative z-10 container mx-auto px-margin-mobile md:px-margin-desktop text-center max-w-4xl flex flex-col items-center">
+        <img alt="Nrityaswarupam logo" class="logo-flicker h-32 md:h-44 w-auto object-contain mb-8 rounded-full drop-shadow-[0_0_25px_rgba(233,195,73,0.25)] cursor-pointer" src="/images/logo.png" />
+        <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-tertiary-fixed mb-6 tracking-tight">
+          Elevating Tradition <br /> <span class="text-secondary italic font-light">Through Movement</span>
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto leading-relaxed">
+          Discover the grace, discipline, and timeless beauty of classical dance. Join a community dedicated to artistic excellence and cultural heritage on the ultimate stage.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto">
+          <a class="bg-primary-container text-tertiary-fixed font-label-md text-label-md px-8 py-4 rounded-full gold-glow transition-all duration-300 border border-transparent hover:border-secondary/30 flex items-center justify-center gap-2" href="/join">
+            Begin Your Journey
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+          <a class="bg-transparent text-secondary border border-secondary font-label-md text-label-md px-8 py-4 rounded-full hover:bg-secondary/10 transition-colors duration-300 flex items-center justify-center gap-2" href="/gallery">
+            <span class="material-symbols-outlined text-sm">play_circle</span>
+            Watch Performance
+          </a>
+        </div>
+      </div>
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 hidden sm:block">
+        <div class="flex flex-col items-center text-secondary/50 animate-bounce">
+          <span class="font-label-sm text-label-sm uppercase tracking-widest mb-2">Discover</span>
+          <span class="material-symbols-outlined text-sm">south</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Our Vision Section -->
+    <section class="py-xl relative">
+      <div class="container mx-auto px-margin-mobile md:px-margin-desktop max-w-7xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-center">
+          <div class="lg:col-span-5 lg:col-start-1 flex flex-col justify-center space-y-6 relative z-10">
+            <div class="w-16 h-1 bg-secondary mb-4"></div>
+            <h2 class="font-headline-lg text-headline-lg text-tertiary-fixed">The Soul of <br /><span class="text-secondary">Rhythm</span></h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              At Nrityaswarupam, we view dance not merely as movement, but as a profound spiritual practice. Our vision is to cultivate an environment where rigorous discipline meets boundless expression.
+            </p>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              We are committed to preserving the purity of ancient traditions while providing a contemporary platform for artists to explore the depths of their creativity. Every step, every gesture is an offering to the art form.
+            </p>
+            <div class="pt-4">
+              <a class="text-secondary font-label-md text-label-md uppercase tracking-wider border-b border-secondary/30 hover:border-secondary pb-1 transition-all duration-300 inline-flex items-center gap-2" href="/about">
+                Read Our Story
+                <span class="material-symbols-outlined text-sm">arrow_right_alt</span>
+              </a>
+            </div>
+          </div>
+          <div class="lg:col-span-6 lg:col-start-7 relative mt-10 lg:mt-0">
+            <div class="relative z-10 gold-border-gradient rounded-xl p-2 bg-surface-container-low shadow-[0_0_30px_rgba(212,175,55,0.05)]">
+              <img alt="Dancer's hands forming a traditional mudra" class="w-full h-[500px] object-cover rounded-lg image-desaturate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGdrW5JPMW8l6Jq04BJOPfyCcyH0Vs3vzFKW0shK4xk2swmG8ejv59_qxozIbPtljuG5Wqry9G74Bg7jsjPi-RCraIB-F_am6irdvfzoenlLR5uz9Vm4tc1K234JKjIPo_Xh4Uf0FHX0OwqJmQXMAcX5OxYPfCeJkYPlbwlZZam3MTdLc1jFnxm3nGnEZHfaNzglNAwIUp2GNSbZ8Zgjy06pa0i7z_-Wj_xDqbvmuniWYRqWcNcmXvobHu9dS6oo7gUCgBPObbeT2t" />
+            </div>
+            <div class="absolute -top-10 -right-10 w-full h-full border border-secondary/20 rounded-xl z-0"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Dance Forms -->
+    <section class="py-xl bg-surface-container-low relative border-y border-outline-variant/10">
+      <div class="container mx-auto px-margin-mobile md:px-margin-desktop max-w-7xl">
+        <div class="text-center mb-16">
+          <h2 class="font-headline-md text-headline-md text-tertiary-fixed mb-4">Master the <span class="text-secondary">Forms</span></h2>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">Immerse yourself in our meticulously curated curriculum, designed to guide you from foundational techniques to advanced artistry.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+          <a class="md:col-span-2 group relative rounded-xl overflow-hidden cursor-pointer block" href="/schedule">
+            <img alt="Bharatanatyam performance" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 image-desaturate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATEtEU_FinqaKdxKnqciB6i4yFjQ-7p4UKEdjlZl14VB6nUzpFlWtRH7fcm66V4-UHXTXsjYbQQEvzV0RRLgTwniEYOzpnKukmIgiRSTb12b7tR_0XLOZG2kGBsE-sbIb488k2yPhWp3fu04oLo4uVgg1ZzApmpdNsIkXaX1kktCKeeJuRcSjU6xzbSArwgSs9rVkTd_tm2G5U9zU-W1N0QpZKIoSrPlg8rgmG0h5s2_r6ndTF_LZDRHSv0vk5RN2PHlJMuMFPul3E" />
+            <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/60 to-transparent"></div>
+            <div class="absolute inset-0 border border-outline-variant/20 rounded-xl group-hover:border-secondary/50 transition-colors duration-500"></div>
+            <div class="absolute bottom-0 left-0 p-8 flex flex-col justify-end h-full">
+              <span class="text-secondary font-label-sm text-label-sm uppercase tracking-widest mb-2">Classical Foundation</span>
+              <h3 class="font-headline-sm text-headline-sm text-tertiary-fixed mb-2 group-hover:text-secondary transition-colors">Bharatanatyam</h3>
+              <p class="font-body-md text-body-md text-on-surface-variant max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0">The ancient art of storytelling through intricate footwork and expressive abhinaya.</p>
+            </div>
+          </a>
+          <a class="group relative rounded-xl overflow-hidden cursor-pointer bg-surface border border-outline-variant/20 hover:border-secondary/50 transition-colors duration-500 block" href="/schedule">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-surface-variant to-surface opacity-50"></div>
+            <div class="p-8 flex flex-col h-full relative z-10">
+              <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-6">
+                <span class="material-symbols-outlined text-secondary">self_improvement</span>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-tertiary-fixed mb-2">Contemporary Fusion</h3>
+              <p class="font-body-md text-body-md text-on-surface-variant flex-grow">Blending classical discipline with modern movement vocabularies for a unique expressive style.</p>
+              <div class="mt-4 flex items-center text-secondary font-label-sm text-label-sm uppercase tracking-wider group-hover:translate-x-2 transition-transform">
+                Explore <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+              </div>
+            </div>
+          </a>
+          <a class="group relative rounded-xl overflow-hidden cursor-pointer bg-surface border border-outline-variant/20 hover:border-secondary/50 transition-colors duration-500 block" href="/schedule">
+            <img alt="Dancer's anklets (ghungroos)" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-40 image-desaturate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBKMaPDrxt9Ik8fszbilv66HXVXXWsOu9XjJmdaZ4uZGMCgOMrQaGMOLJtAjnMBePAU_Aizqj7-LxUERAe0CVcwrfXxGlwwrY6mcDFCuwt-Q_ehn7UDMqMXwc5bQ9ZVUOoSMZL8-DLCuTikCqyzN3cugFAzwLK97SMsX9qX3hK9ySGz4iVNKWbmEpg2sLXajSm_BRuzrV4TlfWNR9lCoPKW7pGyeesc-29HbduWJILzZc59fC4yrzyH2hcy2Mn2tA_Y_zpiEohSeb5" />
+            <div class="absolute inset-0 bg-gradient-to-t from-surface to-surface/40"></div>
+            <div class="absolute bottom-0 left-0 p-8">
+              <h3 class="font-headline-sm text-headline-sm text-tertiary-fixed mb-2 group-hover:text-secondary transition-colors">Folk Traditions</h3>
+              <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Vibrant, energetic expressions celebrating regional heritage and rhythms.</p>
+            </div>
+          </a>
+          <div class="md:col-span-2 group relative rounded-xl overflow-hidden bg-surface-variant/30 border border-outline-variant/20 flex items-center justify-center p-8">
+            <div class="flex flex-wrap items-center justify-center w-full text-center">
+              {stats.map((s) => (
+                <div class="px-6 sm:px-10 border-l border-outline-variant/30 first:border-l-0">
+                  <p class="font-display-lg text-headline-lg md:text-display-lg text-secondary mb-2">{s.value}</p>
+                  <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-xl">
+      <div class="container mx-auto px-margin-mobile md:px-margin-desktop max-w-7xl">
+        <div class="flex flex-col items-center text-center mb-16">
+          <span class="material-symbols-outlined text-secondary text-4xl mb-4 opacity-50">format_quote</span>
+          <h2 class="font-headline-md text-headline-md text-tertiary-fixed">Voices from the <span class="text-secondary">Stage</span></h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-lg max-w-5xl mx-auto">
+          {testimonials.map((t, i) => (
+            <div class="bg-surface-container p-8 rounded-xl border border-outline-variant/10 relative">
+              {i % 2 === 0 ? (
+                <div class="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-secondary/50 rounded-tl-lg"></div>
+              ) : (
+                <div class="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-secondary/50 rounded-br-lg"></div>
+              )}
+              <p class="font-body-lg text-body-lg text-on-surface-variant italic mb-6">&ldquo;{t.quote}&rdquo;</p>
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden border border-secondary/30 shrink-0">
+                  {t.photo && <img alt={t.name} class="w-full h-full object-cover" src={t.photo} />}
+                </div>
+                <div>
+                  <p class="font-label-md text-label-md text-tertiary-fixed">{t.name}</p>
+                  <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">{t.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Join CTA -->
+    <section class="py-xl border-t border-outline-variant/10">
+      <div class="container mx-auto px-margin-mobile md:px-margin-desktop max-w-3xl text-center">
+        <h2 class="font-headline-md text-headline-md text-tertiary-fixed mb-4">Join a <span class="text-secondary">Class</span></h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-8">Take the first step onto the stage. Browse our weekly timetable and reserve your place in a session that speaks to you.</p>
+        <a class="inline-flex items-center gap-2 bg-primary-container text-tertiary-fixed font-label-md text-label-md px-8 py-4 rounded-full gold-glow transition-all duration-300 border border-transparent hover:border-secondary/30" href="/schedule">
+          View the Schedule
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
