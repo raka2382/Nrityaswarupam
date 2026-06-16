@@ -1,7 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 import { isSupabaseConfigured, createSupabaseServerClient } from "./lib/supabase";
 
-const PUBLIC_ADMIN_PATHS = ["/admin/login", "/admin/callback"];
+const PUBLIC_ADMIN_PATHS = ["/admin/login"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const path = context.url.pathname;
