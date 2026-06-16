@@ -67,6 +67,18 @@ body {
   filter: grayscale(0%) contrast(1);
 }
 
+/* Responsive headings: the display sizes already scale via *-mobile variants,
+   but the headline utilities are fixed px. Scale them down on small screens so
+   phones/tablets don't feel cramped or overflow. */
+@media (max-width: 767px) {
+  .text-headline-lg { font-size: 30px; line-height: 38px; }
+  .text-headline-md { font-size: 26px; line-height: 32px; }
+  .text-headline-sm { font-size: 20px; line-height: 28px; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .text-headline-lg { font-size: 40px; line-height: 48px; }
+}
+
 /* Hero logo: a slow translucent "breathing" flicker that becomes fully opaque
    (and brighter) on hover. */
 @keyframes logo-breathe {
