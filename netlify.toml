@@ -4,3 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # These env vars are NOT secrets, so exclude them from Netlify's secret scanner:
+  #  - ENQUIRY_FROM/TO_EMAIL: plain email addresses
+  #  - PUBLIC_SUPABASE_*: public by design (exposed to the browser, guarded by RLS)
+  # The real secret (RESEND_API_KEY) is never hard-coded and stays scanned.
+  SECRETS_SCAN_OMIT_KEYS = "ENQUIRY_FROM_EMAIL,ENQUIRY_TO_EMAIL,PUBLIC_SUPABASE_URL,PUBLIC_SUPABASE_ANON_KEY"
