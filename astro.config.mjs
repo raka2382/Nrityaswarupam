@@ -1,12 +1,12 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import node from "@astrojs/node";
+import netlify from "@astrojs/netlify";
 
-// Public pages are static; data-driven pages (schedule/gallery/about), the admin
-// dashboard, and API routes run on-demand via the Node adapter (prerender = false).
-// To deploy on Netlify/Vercel, swap the adapter for theirs.
+// Public pages are static; data-driven pages (schedule/gallery/about/home),
+// the admin dashboard, and API routes run on-demand (prerender = false) as
+// Netlify serverless functions.
 export default defineConfig({
   site: "https://nrityaswarupam.example.com",
   output: "static",
-  adapter: node({ mode: "standalone" }),
+  adapter: netlify(),
 });
